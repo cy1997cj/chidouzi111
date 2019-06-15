@@ -518,3 +518,157 @@ while(!kbhit())
 		 }
 		 closegraph();
  }
+ 
+ 
+//敌人移动位置 
+void movethem(struct play *them)
+{
+	int i,loop;
+	randomize();
+	for(i=0;i<5;i++)
+	{
+		if(you.x==them[i].x&&(them[i].y+1)==you.y)
+		them[i].y++;
+		else if(you.x==them[i].x&&(them[i].y-1)==you.y)
+		them[i].y--;
+		else if(you.y==them[i].y&&(them[i].x+1)==you.x)
+		them[i].x++;
+		else if(you.y==them[i].y&&(them[i].x-1)==you.x)
+		them[i].x--;
+		else
+		{
+		loop: //方向赋值 
+		xx[i][0]=rand()%4+1;
+		if(xx[i][0]==1&&xx[i][1]==2||xx[i][0]==2&&xx[i][1]==1)
+		goto loop;
+		if(xx[i][0]==3&&xx[i][1]==4||xx[i][0]==4&&xx[i][1]==3)
+		goto loop;
+		xx[i][1]==xx[i][0];
+		if(xx[i][0]==1)//四个方向 
+		{
+			them[i].x--;
+			if(a[them[i].x][them[i].y]==2)//碰墙返回原地 
+			{
+				them[i].x++;
+				goto loop;
+			}
+		}
+		else if(xx[i][0]==2)
+		{
+				them[i].x++;
+			if(a[them[i].x][them[i].y]==2)
+			{
+				them[i].x--;
+				goto loop;
+			}
+		}
+		
+		else if(xx[i][0]==3)
+		{
+				them[i].y++;
+			if(a[them[i].x][them[i].y]==2)
+			{
+				them[i].y--;
+				goto loop;
+			}
+		}
+			else if(xx[i][0]==4)
+		{
+				them[i].y--;
+			if(a[them[i].x][them[i].y]==2)
+			{
+				them[i].y++;
+				goto loop;
+			}
+		}
+	}
+}
+} 
+
+//敌人移动判断 
+fun(struct play *them)
+{
+	int i; 
+	//删除敌人原来位置 
+	setcolor(0);
+	for(i=0;i<5;i++0)
+	circle(them[i].y*20+100,them[i].x*20+100,9);
+	movethem(them);
+	
+}
+win()//胜利 
+{
+	cleardevice();
+	settextstyle(0,0,4);
+	while(!kbhit())
+	{
+		setcolor(rand()%13+1);
+		outtextxy(200,200,"YOU WIN!");
+		delay(1000);
+		
+	}
+}
+
+//失败 
+false1()
+{
+cleardevice();
+settextstyle(0,0,4);
+while(!kbhit())
+{
+	setcolor(rand()%13+1);
+	outtextxy(180,200,"GAME OVER!");
+	delay(1000);
+	
+ } 
+ }
+ //判断是否失败 
+ loseyes()
+ {
+ 	int i;
+ 	for(i=0;i<5;i++)
+ 	if(them[i].x==you.x&&them[i].y==you.y)
+ 	false=1;
+ 	
+ }
+ 
+ main()
+ {
+ 	int gd=DETECT,gm;
+ 	int key,i,loop,jump;
+ 	int choice;
+ 	initgraph(&gd,&gm,"c:\\tc");
+ 	cleardevice();
+ 	DrawSnow();
+ 	hello();
+ 	getchar();
+ 	instruction();
+ 	scanf("%d",&choice);
+ 	levelchoose(choice);
+ 	getchar();
+ 	loop:
+ 		init();
+ 		begain();
+ 		while(!kbhit())
+ 		{
+ 			//重画敌人 
+ 			for(i=0;i<5;i++)
+ 			setfillstyle(SOLID_FILL,GREEN);
+ 			circle(them[i].y*20+100,them[i].x*20+100,9);
+ 			TimeDelay(280000);
+ 			for(i=0;i<5;i++)
+ 			if(them[i].x==you.x&&them[i].y==you.y)
+ 			false=1;
+ 			loseyes();//判断是否失败 
+ 			if(false)
+ 			break;
+ 			key=bioskey(0);
+ 			setcolor(0);//删除自己原来的位置 
+ 			circle(100+you.y*20,100+you.x*20,9);
+ 			fun(them);//处理敌人
+			  
+ 			if(key==ESC)
+ 			break;
+ 			if (key==SPACE)//SPACE重新开始 
+ 			goto loop;
+ 			
