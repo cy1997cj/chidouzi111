@@ -97,14 +97,19 @@ voidlevelchoose(int x)
 }
 void hello()
 {
-	printf("XXXXXXXXXXXX??XXXXXXXXXXXXX????????????????XXXXXXXXXXXXXXX??XXXXXXXXXXXX\n");?
-	printf("X???????XXX??????????XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX??XXXXXXXXXXXX\n");?
-	printf("X??XXX?
-?
-XX?
-?
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX??
-XXXXXXXXXXXX\n");?
+	printf("XXXXXXXXXXXX  XXXXXXXXXXXXX            XXXXXXXXXXXXXXX  XXXXXXXXXXXX\n");
+	printf("X       XXX          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXX\n");
+	printf("X  XXX      XX       XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
+	printf("X  XXX  X   XXXXXXXXXXXXXXXX              XXXXXXXXXXXXXXXX  XXXXXXXXXXXX\n");
+	printf("X  XXX  X  XXXXXXXXXXXXXXXXX  XXXXXXXXXX  XXXXXXXXXXXXXXXX  XXXXXXXXXXXX\n"); 
+	printf("X  XXX  XXX        XXXXXXXXX  XXXXXXXXXX  XXXXXXXXXXXXXXX    XXXXXXXXXXX\n");
+	printf("X  XXX  XXXXXXX   XXXXXXXXXX  XXXXXXXXXX  XXXXXXXXXXXXXXX    XXXXXXXXXXX\n");
+	printf("X  XXX  XXXXXX  XXXXXXXXXXXX              XXXXXXXXXXXXXX  XX  XXXXXXXXXX\n");
+	printf("X       XXXX   XXXXXXXXXXXXXXX XXXXXXX XXXXXXXXXXXXXXXX  XXXX  XXXXXXXXX\n");
+	printf("X  XXX  XXX  XXXXXXXXXXXXXXXXX  XXXXXX  XXXXXXXXXXXXXX  XXXXXX  XXXXXXXX\n");
+	printf("X  XXX  XXX  XXXXXX  XXXXXXXXXX  XXXX   XXXXXXXXXXXXX   XXXXXXX  XXXXXXX\n");
+	printf("XXXXXXXXXX  XXXXXXX  XXXXXXXXXX XXXXX  XXXXXXXXXXXXX   XXXXXXXX    XXXXX\n");
+	printf("XXXXXXXXXXX  XXXXX   XXXXXXXXXXXXXXX  XXXXXXXXXXXX    XXXXXXXXXX    XXXX\n");
 
 }
 
@@ -198,3 +203,109 @@ void DrawSnow()
 	cleardevice();
 	
 }
+voidInit(void)
+{
+	intgd=DETECT,gm;
+	initgraph(&gd,&gm,"c:\\tc");
+	cleardevice();
+	
+}
+begain()
+{
+	int i,j;
+	sleep(1);
+	for(i=0;i<15;i++)
+	for(j=0;j<20;j++)
+	if(a[i][j]==2)
+	{
+		setfillstyle(SOLID_FILL,BLUE);
+		bar(100+j*20-10,100+i*20+10,100+j*20+10,100+i*20-10);
+		
+	}
+	else if(a[i][j]==3)
+	{
+		setcolor(RED);
+		circle(100+j*20,100+i*20,9);
+		
+	}
+	else if(a[i][j]==4)
+	{
+		setcolor(GREEN);
+		circle(100+j*20,100+i*20,9);
+	}
+		else if(a[i][j]==0)
+		{
+			setcolor(YELLOW);
+			circle(100+j*20,100+i*20,3);
+			
+		}
+		you.x=5;you.y=9;
+		them[0].x=2;them[0].y=15;
+		them[1].x=4;them[1].y=1;
+		them[2].x=8;them[2].y=16;
+		them[3].x=12;them[3].y=13;
+		them[4].x=13;them[4].y=7;
+}
+voidmovethem(struct play *them)
+{
+	int i,loop;
+	randomize();
+	for(i=0;i<5;i++)
+	{
+		if(you.x==them[i].x&&(them[i].y+1)==you.y)
+		them[i].y++;
+		else if(you.x==them[i].x&&(them[i].y-1)==you.y)
+		them[i].y--;
+		else if(you.y==them[i].y&&(them[i].x-1)==you.x)
+		them[i].x++;
+		else if(you.y==them[i].y&&(them[i].x-1)==you.x)
+		them[i].x--;
+		else
+		{
+		loop: 
+		xx[i][0]=rand()%4+1;
+		if(xx[i][0]==1&&xx[i][1]==2||xx[i][0]==2&&xx[i][1]==1)
+		goto loop;
+		if(xx[i][0]==3&&xx[i][1]==4||xx[i][0]==4&&xx[i][1]==3)
+		goto loop;
+		xx[i][1]==xx[i][0];
+		if(xx[i][0]==1)
+		{
+			them[i].x--;
+			if(a[them[i].x][them[i].y]==2)
+			{
+				them[i].x++;
+				goto loop;
+			}
+		}
+		else if(xx[i][0]==2)
+		{
+				them[i].x++;
+			if(a[them[i].x][them[i].y]==2)
+			{
+				them[i].x--;
+				goto loop;
+			}
+		}
+		
+		else if(xx[i][0]==3)
+		{
+				them[i].y++;
+			if(a[them[i].x][them[i].y]==2)
+			{
+				them[i].y--;
+				goto loop;
+			}
+		}
+			else if(xx[i][0]==4)
+		{
+				them[i].y--;
+			if(a[them[i].x][them[i].y]==2)
+			{
+				them[i].y++;
+				goto loop;
+			}
+		}
+	}
+}
+
