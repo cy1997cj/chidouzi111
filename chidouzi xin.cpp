@@ -110,6 +110,18 @@ void hello()
 	printf("X  XXX  XXX  XXXXXX  XXXXXXXXXX  XXXX   XXXXXXXXXXXXX   XXXXXXX  XXXXXXX\n");
 	printf("XXXXXXXXXX  XXXXXXX  XXXXXXXXXX XXXXX  XXXXXXXXXXXXX   XXXXXXXX    XXXXX\n");
 	printf("XXXXXXXXXXX  XXXXX   XXXXXXXXXXXXXXX  XXXXXXXXXXXX    XXXXXXXXXX    XXXX\n");
+	printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
+	printf("X         XXXXXX   XXXXXXXX       XXX   XXXX   XXXXX   XXXXXX   XXXXX  X\n");
+	printf("X  XXXXX  XXXXXX   XXXXXXX   XXX  XXX   XXXX   XXXXX   XXXXXX   XXXXX  X\n");
+	printf("X  XXXXXX  XXXXX   XXXXXXX  XXXXX  XX    XX    XXXXX   XXXXXX    XXXX  X\n");
+	printf("X  XXXXXX  XXXX  X  XXXXX  XXXXXX  XX    XX    XXXX  X  XXXXX    XXXX  X\n");
+	printf("X  XXXXXX  XXXX  X  XXXXX  XXXXXX  XX    XX    XXXX  X  XXXXX  X  XXX  X\n");
+	printf("X  XXXXXX  XXXX  X  XXXXX  XXXXXXXXXX  X XX X  XXXX  X  XXXXX  X  XXX  X\n");
+	printf("X  XXXXX  XXXX  XXX  XXXX  XXXXXXXXXX  X    X  XXX  XXX  XXXX  XX  XX  X\n");
+	printf("X         XXXX  XXX  XXXX  XXXXXXXXXX  X    X  XXX  XXX  XXXX  XX  XX  X\n");
+	printf("X  XXXXXXXXXXX       XXXX  XXXXXX  XX  X    X  XXX       XXXX  XXX  X  X\n");
+	
+	
 
 }
 
@@ -308,4 +320,85 @@ voidmovethem(struct play *them)
 		}
 	}
 }
+fun(struct play *them)
+{
+	int i
+	setcolor(0);
+	for(i=0;i<5;i++0)
+	circle(them[i].y*20+100,them[i].x*20+100,9);
+	movethem(them);
+	
+}
+win()
+{
+	cleardevice();
+	settextstyle(0,0,4);
+	while(!kbhit())
+	{
+		setcolor(rand()%13+1);
+		outtextxy(200,200,"YOU WIN!");
+		delay(1000);
+		
+	}
+}
 
+false1()
+{
+cleardevice();
+settextstyle(0,0,4);
+while(!kbhit())
+{
+	setcolor(rand()%13+1);
+	outtextxy(180,200,"GAME OVER!");
+	delay(1000);
+	
+ } 
+ }
+ 
+ loseyes()
+ {
+ 	int i;
+ 	for(i=0;i<5;i++)
+ 	if(them[i].x==you.x&&them[i].y==you.y)
+ 	false=1;
+ 	
+ }
+ 
+ main()
+ {
+ 	int gd=DETECT,gm;
+ 	int key,i,loop,jump;
+ 	int choice;
+ 	initgraph(&gd,&gm,"c:\\tc");
+ 	cleardevice();
+ 	DrawSnow();
+ 	hello();
+ 	getchar();
+ 	instruction();
+ 	scanf("%d",&choice);
+ 	levelchoose(choice);
+ 	getchar();
+ 	loop:
+ 		init();
+ 		begain();
+ 		while(!kbhit())
+ 		{
+ 			for(i=0;i<5;i++)
+ 			setfillstyle(SOLID_FILL,GREEN);
+ 			circle(them[i].y*20+100,them[i].x*20+100,9);
+ 			TimeDelay(280000);
+ 			for(i=0;i<5;i++)
+ 			if(them[i].x==you.x&&them[i].y==you.y)
+ 			false=1;
+ 			loseyes();
+ 			if(false)
+ 			break;
+ 			key=bioskey(0);
+ 			setcolor(0);
+ 			circle(100+you.y*20,100+you.x*20,9);
+ 			fun(them);
+ 			if(key==ESC)
+ 			break;
+ 			
+		 }
+ }
