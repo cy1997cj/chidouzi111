@@ -10,7 +10,7 @@
 #define RIGHT 0x4d00
 #define DOWN 0x5000
 #define UP 0x4800
-#define ESC 0xO110
+#define ESC 0x0110
 #define ENTER 0x1c0d
 #define SPACE 0x3920
 
@@ -120,8 +120,10 @@ void hello()
 	printf("X  XXXXX  XXXX  XXX  XXXX  XXXXXXXXXX  X    X  XXX  XXX  XXXX  XX  XX  X\n");
 	printf("X         XXXX  XXX  XXXX  XXXXXXXXXX  X    X  XXX  XXX  XXXX  XX  XX  X\n");
 	printf("X  XXXXXXXXXXX       XXXX  XXXXXX  XX  X    X  XXX       XXXX  XXX  X  X\n");
-	
-	
+	printf("X  XXXXXXXXXX  XXXXX  XXX  XXXXXX  XX  X    X  XX  XXXXX  XXX  XXXX    X\n");
+	printf("X  XXXXXXXXXX  XXXXX  XXXX  XXXX   XX  XXXXXX  XXXXX  XXX  XXXX    X\n");
+	printf("X  XXXXXXXXXX  XXXXX  XXXX   XXX  XXX  XX  XXXX  XXXXX  XXX  XXXXX   X\n");
+	printf("X  XXXXXXXXX  XXXXXXX  XXXX      XXXX  XX  XX     XXXXXXX  XX  XXXXX   X\n");	
 
 }
 
@@ -399,6 +401,67 @@ while(!kbhit())
  			fun(them);
  			if(key==ESC)
  			break;
- 			
+ 			if (key==SPACE)
+ 			goto loop;
+ 			else if(key==UP)
+ 			{
+ 				you.x--;
+ 				if(a[you.x][you.y]==2)
+ 				you.x++;
+ 				else if(a[you.x][you.y]==0)
+ 				drawblackdou(you.x,you.y);
+ 				
+			 }
+			 else if(key==DOWN)
+			 {
+			 	you.x++;
+				 if(a[you.x][you.y]==2)
+				 you.x--;
+				 else if(a[you.x][you.y]==0)
+				 drawblackdou(you.x,you.y);
+			 }
+			 else if(key==RIGHT)
+			 {
+			 	you.y++;
+				 if(a[you.x][you.y]==2)
+				 you.y--;
+				 else if(a[you.x][you.y]==0)
+				 drawblackdou(you.x,you.y);
+			 }
+			 else if(key==LEFT)
+			 {
+			 	you.y--;
+				 if(a[you.x][you.y]==2)
+				 you.y++;
+				 else if(a[you.x][you.y]==0)
+				 drawblackdou(you.x,you.y);
+			 }
+			 if(sum==50)
+			 break;
+			 setcolor(RED);
+			 circle(100+you.y*20,100+you.x*20,9);
+			 for(i=0;i<5;i++)
+			 {
+			 	setcolor(GREEN);
+			 	circle(them[i].y*20+100,them[i].x*20+100,9);
+			 	
+			 }
+			 setcolor(RED);
+			 loseyes();
+			 if(false)
+			 break;
 		 }
+		 if(sum==50)
+		 {
+		 	win();
+			 getch();
+		 	
+		 }
+		 if(false)
+		 {
+		 	false1();
+		 	getch();
+		 	
+		 }
+		 closegraph();
  }
