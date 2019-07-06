@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <ctime>
 #include <conio.h>
@@ -12,7 +12,6 @@ int dali;
 int fx[4]={-1,27,1,-27};
 int fxfx[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 int dis[1000][1000]; //0:墙 1:有分的路 2:没分的路 3:怪物的家 
-
 int changdi[30][27]={
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0},
@@ -45,14 +44,6 @@ int changdi[30][27]={
     {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
-  class Mouth
-{
-public:
-int x;
-int y;
-int len;
-int direct;
-}mouth;    
 int x,x1,x2,x3,x4,y,y1,y2,y3,y4;
 int now,now1,now2,now3,now4;
 int g1,g2,g3,g4;
@@ -72,20 +63,6 @@ pos.X=2*y;
 pos.Y=x;
 SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),pos);
 }
-
-void CEatView::OnInitialUpdate() //初始化嘴巴与豆子
-{
-//CView::OnInitialUpdate();
-mouth.x=10;
-mouth.y=10;
-mouth.direct=3; //方向
-bean[0].isBean=1; //豆子有无（1有0无）
-bean[1].isBean=1;  //这里就只创建了两个豆子大笑
-
-
-// TODO: Add your specialized code here and/or call the base class
-
-} 
 
 void begin(){
     system("cls");

@@ -1,5 +1,5 @@
 #include "graphics.h"
-#include "stdio.h"
+#include "stdlib.h"
 #include "dos.h"
 #include "bios.h"
 #include "stdio.h"
@@ -10,7 +10,7 @@
 #define RIGHT 0x4d00
 #define DOWN 0x5000
 #define UP 0x4800
-#define ESC 0x0110
+#define ESC 0x011b
 #define ENTER 0x1c0d
 #define SPACE 0x3920
 
@@ -24,12 +24,14 @@ struct play
  	int x;
  	int y;
  	int speed;
- }snow[100];
- intsnownum=0;
+ }
+ snow[100];
+ int snownum=0;
  struct play you,them[5];
  void *save;
- int sum=0;
+ int sum=0;//吃豆子个数 
  int change=10;
+ //0douzi  1kongdi  2qiang   3ziji   4diren  
  int a[15][20]={2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
 2,1,1,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,2,
 2,1,2,2,2,1,1,2,1,1,0,0,0,1,1,4,1,1,0,2,
@@ -63,6 +65,7 @@ struct play
   2,1,0,0,0,0,0,4,0,1,1,0,1,1,1,1,0,0,1,2,
   2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
  
+ 
  int c[15][20]={2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
  2,1,1,0,0,0,0,0,1,0,0,0,1,1,2,1,1,1,0,2,
  2,1,2,2,2,1,1,2,2,1,0,0,0,1,2,4,1,1,0,2,
@@ -78,11 +81,11 @@ struct play
  2,1,2,2,1,2,2,1,2,1,1,0,1,4,1,2,0,0,1,2,
  2,1,0,0,0,0,0,4,0,1,1,0,1,1,1,1,0,0,1,2,
  2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
-}
 
-int xx[5][2];
-int false=0;
-voidlevelchoose(int x)
+
+int xx[5][2];//敌人方向的结构体 
+int false=0;//输赢 
+void levelchoose(int x)
 {
 	int j,k;
 	switch(x)
@@ -92,9 +95,15 @@ voidlevelchoose(int x)
 		for(k=0;k<20;k++)
 		a[j][k]=b[j][k];
 		break;
+		case 3:for(j=0;j<15;j++)
+		for(k=0;k<20;k++)
+		a[j][k]=c[j][k];
+		break;
 		default:break;
 	}
 }
+
+//输出界面 
 void hello()
 {
 	printf("XXXXXXXXXXXX  XXXXXXXXXXXXX            XXXXXXXXXXXXXXX  XXXXXXXXXXXX\n");
@@ -127,6 +136,7 @@ void hello()
 
 }
 
+
 void instruction()
 {
 	printf("           ******************************\n");
@@ -135,56 +145,65 @@ void instruction()
 	printf("                   WELCOME TO PACMAN WORLD!\n\n");
 	printf("Press up,down,left,right to play.\n");
 	printf("Press Esc to quit it.\n");
-	printf("Press space to reset the game when you are playing.\n";)
+	printf("Press space to reset the game when you are playing.\n");
 	printf("How to win the game:\n");
-	printf("tlf you have aten all of the yellow peans without being in the same location with the green enemy , you win !\n");
-	printf("tlf you are in the same location with the green enemy ,you lose !\n");
+	printf("\tlf you have aten all of the yellow peans without being in the same location with the green enemy , you win !\n");
+	printf("\tlf you are in the same location with the green enemy ,you lose !\n");
 	printf("Please choose game level number form 1 to 3 and pres Enter key to start game :\n");
 	 
 }
 
-voidTimeDelay(unsigned long microsec)
+void TimeDelay(unsigned long microsec)
 {
-	unoin REGSS r;
+	union REGS r;
 	r.h.ah=0x86;
 	r.x.cx=microsec>>16;
 	r.x.dx=microsec;
 	int86(0x15,&r,&r);
 }
 
+//吃豆子函数 
 drawblackdou(int x,int y)
 {
-	set color(0);
+	setcolor(0);
 	circle(100+y*20,100+x*20,3);
-	sum++;
-	a[x][y]=1;
+	sum++;//吃到豆子加一 
+	a[x][y]=1;//吃成普通平地 
 }
 
+//音乐 
 void pr()
 {
 	int s[15]={0,100,150,200,50,150,250,300,250,300,250,150,100,250,350};
-	set color(change/10);
-	set textstyle(0,0,4);
+	setcolor(change/10);//欢迎词颜色 
+	settextstyle(0,0,4);//字体
+	//输出欢迎词 
 	outtextxy(20,200,"WELCOME TO OUR GAME!!");
 	outtextxy(20,250,"Press Space key to");
 	outtextxy(20,300,"continue...");
 	sound(s[change/10]);
 	
 }
+
+//播放动画音乐 
 void DrawSnow()
 {
 	int i;
-	int x[62];
-	set inestyle(SOLID_LINE,O,THICK_WIDTH);
+	int sx[62];
+	setinestyle(SOLID_LINE,O,THICK_WIDTH);
+	
+	//画出白色雪花的三条线 
 	line(1,1,9,9);
-	line(0,5,0,5);
+	line(0,5,10,5);
 	line(9,1,1,9);
 	save=malloc(200);
 	getimage(0,0,10,10,save);
-	cleardevice();
-	randomize();
-	for(i=0;i<62;i++)
+	cleardevice();// 清屏 
+	randomize();//种子数 
+	for(i=0;i<62;i++)//雪花位置 
 	sx[i]=(i+2)*10;
+	
+	//播放音乐下雪 
 	while(!kbhit())
 	{
 		Pr();
@@ -195,72 +214,92 @@ void DrawSnow()
 			snow[snownum].x=sx[i];
 			snow[snownum].y=10-random(100);
 		}
+		
+		
 		for(i=0;i<snownum;i++)
 		putimage(snow[i].x,snow[i].y,save,COPY_PUT);
 		delay(100);
 		cleardevice();
+		
+		//Pr函数输出欢迎词声音 
 		Pr();
-		if(snownum!=100) snownum++;
+		//画出雪花 
+		if(snownum!=100) 
+		snownum++;
 		setfillstyle(SOLID_FILL,15);
 		for(i=0;i<snownum;i++)
 		{
 			snow[i].y+=snow[i].speed;
 			putimage(snow[i].x,snow[i].y,save,COPY_PUT);
-			if(snow[i].y>500) snow[i].y=10-random(200);
+			if(snow[i].y>500) 
+			snow[i].y=10-random(200);
 			 
 		}
 		change++;
 		if(change==140)
 		change=10;
 	}
-	nosoung();
+	nosound();
 	cleardevice();
 	
 }
-voidInit(void)
+
+//图形系统初始化 
+void Init(void)
 {
-	intgd=DETECT,gm;
+	int gd=DETECT,gm;
 	initgraph(&gd,&gm,"c:\\tc");
 	cleardevice();
 	
 }
+
+// 开始 
 begain()
 {
 	int i,j;
 	sleep(1);
 	for(i=0;i<15;i++)
 	for(j=0;j<20;j++)
+	//墙 
 	if(a[i][j]==2)
 	{
 		setfillstyle(SOLID_FILL,BLUE);
 		bar(100+j*20-10,100+i*20+10,100+j*20+10,100+i*20-10);
 		
 	}
+	//自己 
 	else if(a[i][j]==3)
 	{
 		setcolor(RED);
 		circle(100+j*20,100+i*20,9);
 		
 	}
+	//敌人 
 	else if(a[i][j]==4)
 	{
 		setcolor(GREEN);
 		circle(100+j*20,100+i*20,9);
 	}
+	//豆子 
 		else if(a[i][j]==0)
 		{
 			setcolor(YELLOW);
 			circle(100+j*20,100+i*20,3);
 			
 		}
-		you.x=5;you.y=9;
+		
+		//敌人坐标 
+		you.x=5;
+		you.y=9;
 		them[0].x=2;them[0].y=15;
 		them[1].x=4;them[1].y=1;
 		them[2].x=8;them[2].y=16;
 		them[3].x=12;them[3].y=13;
 		them[4].x=13;them[4].y=7;
 }
-voidmovethem(struct play *them)
+
+//敌人移动位置 
+void movethem(struct play *them)
 {
 	int i,loop;
 	randomize();
@@ -270,23 +309,23 @@ voidmovethem(struct play *them)
 		them[i].y++;
 		else if(you.x==them[i].x&&(them[i].y-1)==you.y)
 		them[i].y--;
-		else if(you.y==them[i].y&&(them[i].x-1)==you.x)
+		else if(you.y==them[i].y&&(them[i].x+1)==you.x)
 		them[i].x++;
 		else if(you.y==them[i].y&&(them[i].x-1)==you.x)
 		them[i].x--;
 		else
 		{
-		loop: 
+		loop: //方向赋值 
 		xx[i][0]=rand()%4+1;
 		if(xx[i][0]==1&&xx[i][1]==2||xx[i][0]==2&&xx[i][1]==1)
 		goto loop;
 		if(xx[i][0]==3&&xx[i][1]==4||xx[i][0]==4&&xx[i][1]==3)
 		goto loop;
 		xx[i][1]==xx[i][0];
-		if(xx[i][0]==1)
+		if(xx[i][0]==1)//四个方向 
 		{
 			them[i].x--;
-			if(a[them[i].x][them[i].y]==2)
+			if(a[them[i].x][them[i].y]==2)//碰墙返回原地 
 			{
 				them[i].x++;
 				goto loop;
@@ -322,16 +361,20 @@ voidmovethem(struct play *them)
 		}
 	}
 }
+} 
+
+//敌人移动判断 
 fun(struct play *them)
 {
-	int i
+	int i; 
+	//删除敌人原来位置 
 	setcolor(0);
 	for(i=0;i<5;i++0)
 	circle(them[i].y*20+100,them[i].x*20+100,9);
 	movethem(them);
 	
 }
-win()
+win()//胜利 
 {
 	cleardevice();
 	settextstyle(0,0,4);
@@ -344,6 +387,7 @@ win()
 	}
 }
 
+//失败 
 false1()
 {
 cleardevice();
@@ -356,7 +400,7 @@ while(!kbhit())
 	
  } 
  }
- 
+ //判断是否失败 
  loseyes()
  {
  	int i;
@@ -385,6 +429,7 @@ while(!kbhit())
  		begain();
  		while(!kbhit())
  		{
+ 			//重画敌人 
  			for(i=0;i<5;i++)
  			setfillstyle(SOLID_FILL,GREEN);
  			circle(them[i].y*20+100,them[i].x*20+100,9);
@@ -392,17 +437,20 @@ while(!kbhit())
  			for(i=0;i<5;i++)
  			if(them[i].x==you.x&&them[i].y==you.y)
  			false=1;
- 			loseyes();
+ 			loseyes();//判断是否失败 
  			if(false)
  			break;
  			key=bioskey(0);
- 			setcolor(0);
+ 			setcolor(0);//删除自己原来的位置 
  			circle(100+you.y*20,100+you.x*20,9);
- 			fun(them);
+ 			fun(them);//处理敌人
+			  
  			if(key==ESC)
  			break;
- 			if (key==SPACE)
+ 			if (key==SPACE)//SPACE重新开始 
  			goto loop;
+ 			
+ 			//判断是否吃到豆子碰到壁 
  			else if(key==UP)
  			{
  				you.x--;
@@ -438,6 +486,7 @@ while(!kbhit())
 			 }
 			 if(sum==50)
 			 break;
+			 //再次画出自己的位置 
 			 setcolor(RED);
 			 circle(100+you.y*20,100+you.x*20,9);
 			 for(i=0;i<5;i++)
@@ -447,16 +496,20 @@ while(!kbhit())
 			 	
 			 }
 			 setcolor(RED);
+			 //判断自己是否遇到敌人 
 			 loseyes();
 			 if(false)
 			 break;
 		 }
+		 
+		 //吃满豆子获胜 
 		 if(sum==50)
-		 {
-		 	win();
+		 
+		 	{
+			 win();
 			 getch();
-		 	
-		 }
+		 	} 
+		 
 		 if(false)
 		 {
 		 	false1();
